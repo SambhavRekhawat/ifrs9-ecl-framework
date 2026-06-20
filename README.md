@@ -7,7 +7,7 @@ component of the expected-loss calculation - Probability of Default (PD),
 Loss Given Default (LGD), Exposure at Default (EAD), staging, forward-looking
 macro scenarios - and surfaces the results in an interactive dashboard.
 
-**Live demo:** _<[add your Streamlit Cloud URL here once deployed](https://ifrs9-ecl-framework-f8adumh8vmi7spwoajwhqd.streamlit.app/)>_
+**Live demo:** _<(https://ifrs9-ecl-framework-f8adumh8vmi7spwoajwhqd.streamlit.app/)>_
 
 > The live dashboard reads small pre-computed JSON result files committed to
 > this repo. It does **not** require a database, the raw loan data, or any
