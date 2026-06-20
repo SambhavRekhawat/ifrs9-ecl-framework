@@ -1,0 +1,223 @@
+{
+  "checks": [
+    {
+      "check": "coverage_monotonic_by_stage",
+      "passed": true,
+      "severity": "error",
+      "detail": "Stage1=0.448%, Stage2=2.225%, Stage3=34.29%"
+    },
+    {
+      "check": "stage3_equals_weighted_lgd",
+      "passed": true,
+      "severity": "error",
+      "detail": "Stage3 coverage 34.29% vs weighted LGD 34.29% (tol 0.5)"
+    },
+    {
+      "check": "portfolio_coverage_in_range",
+      "passed": true,
+      "severity": "error",
+      "detail": "coverage 0.691% in [0.05, 2.0]%"
+    },
+    {
+      "check": "scenario_pd_ordering",
+      "passed": true,
+      "severity": "error",
+      "detail": "downside>=base>=upside PIT PD: True ({'base': 0.01081, 'upside': 0.0071, 'downside': 0.03984})"
+    },
+    {
+      "check": "pd_discrimination_auc",
+      "passed": true,
+      "severity": "error",
+      "detail": "best model 'scorecard' AUC 0.9104 >= 0.7"
+    },
+    {
+      "check": "pd_calibration_band_raw",
+      "passed": false,
+      "severity": "warn",
+      "detail": "RAW model pred/obs PD ratio 31.512 (pred 0.2757, obs 0.0088) \u2014 informational; class-weighted model is hot by design and recalibrated by isotonic downstream (see effective_pd_calibration)"
+    },
+    {
+      "check": "effective_pd_calibration",
+      "passed": true,
+      "severity": "error",
+      "detail": "calibrated portfolio PD 0.0154 vs TTC 0.0131 (ratio 1.17 in [0.3, 3.0])"
+    }
+  ],
+  "n_error_passed": 6,
+  "n_error_checks": 6,
+  "n_advisory": 1,
+  "discrimination": {
+    "best_model": "scorecard",
+    "auc": 0.9104,
+    "gini": 0.8207,
+    "ks": 0.6602
+  },
+  "calibration_table": [
+    {
+      "bin": 0,
+      "n": 1510185,
+      "pred_pd": 0.0618,
+      "obs_default": 0.0004
+    },
+    {
+      "bin": 1,
+      "n": 1510190,
+      "pred_pd": 0.0983,
+      "obs_default": 0.0005
+    },
+    {
+      "bin": 2,
+      "n": 1509953,
+      "pred_pd": 0.1309,
+      "obs_default": 0.0007
+    },
+    {
+      "bin": 3,
+      "n": 1510239,
+      "pred_pd": 0.1662,
+      "obs_default": 0.0009
+    },
+    {
+      "bin": 4,
+      "n": 1510382,
+      "pred_pd": 0.2059,
+      "obs_default": 0.0014
+    },
+    {
+      "bin": 5,
+      "n": 1510210,
+      "pred_pd": 0.2526,
+      "obs_default": 0.0021
+    },
+    {
+      "bin": 6,
+      "n": 1510215,
+      "pred_pd": 0.3088,
+      "obs_default": 0.0032
+    },
+    {
+      "bin": 7,
+      "n": 1510194,
+      "pred_pd": 0.3768,
+      "obs_default": 0.0046
+    },
+    {
+      "bin": 8,
+      "n": 1510190,
+      "pred_pd": 0.4681,
+      "obs_default": 0.008
+    },
+    {
+      "bin": 9,
+      "n": 1510205,
+      "pred_pd": 0.6879,
+      "obs_default": 0.0657
+    }
+  ],
+  "calibrated_portfolio_pd": 0.01544,
+  "pd_migration_psi_orig_vs_now": 0.023993014871646727,
+  "sensitivity": {
+    "base_ecl": 1573892560.43,
+    "base_coverage_pct": 0.691,
+    "grid": [
+      {
+        "lever": "BASE CASE",
+        "value": "cpr=0.1, H=60",
+        "total_ecl": 1573892560.43,
+        "coverage_pct": 0.691,
+        "delta_vs_base_pct": 0.0
+      },
+      {
+        "lever": "annual_cpr",
+        "value": "0.0",
+        "total_ecl": 1697312213.0,
+        "coverage_pct": 0.7452,
+        "delta_vs_base_pct": 7.8
+      },
+      {
+        "lever": "annual_cpr",
+        "value": "0.05",
+        "total_ecl": 1634004735.0,
+        "coverage_pct": 0.7174,
+        "delta_vs_base_pct": 3.8
+      },
+      {
+        "lever": "annual_cpr",
+        "value": "0.1",
+        "total_ecl": 1573892560.0,
+        "coverage_pct": 0.691,
+        "delta_vs_base_pct": 0.0
+      },
+      {
+        "lever": "annual_cpr",
+        "value": "0.2",
+        "total_ecl": 1461848813.0,
+        "coverage_pct": 0.6418,
+        "delta_vs_base_pct": -7.1
+      },
+      {
+        "lever": "horizon_months",
+        "value": "36",
+        "total_ecl": 1501775796.0,
+        "coverage_pct": 0.6593,
+        "delta_vs_base_pct": -4.6
+      },
+      {
+        "lever": "horizon_months",
+        "value": "48",
+        "total_ecl": 1543796703.0,
+        "coverage_pct": 0.6778,
+        "delta_vs_base_pct": -1.9
+      },
+      {
+        "lever": "horizon_months",
+        "value": "60",
+        "total_ecl": 1573892560.0,
+        "coverage_pct": 0.691,
+        "delta_vs_base_pct": 0.0
+      },
+      {
+        "lever": "downturn_lgd",
+        "value": "0.3",
+        "total_ecl": 1446715666.0,
+        "coverage_pct": 0.6351,
+        "delta_vs_base_pct": -8.1
+      },
+      {
+        "lever": "downturn_lgd",
+        "value": "0.35",
+        "total_ecl": 1530494911.0,
+        "coverage_pct": 0.6719,
+        "delta_vs_base_pct": -2.8
+      },
+      {
+        "lever": "downturn_lgd",
+        "value": "0.45",
+        "total_ecl": 1698053402.0,
+        "coverage_pct": 0.7455,
+        "delta_vs_base_pct": 7.9
+      },
+      {
+        "lever": "scenario_weights",
+        "value": "base",
+        "total_ecl": 1573892560.0,
+        "coverage_pct": 0.691,
+        "delta_vs_base_pct": 0.0
+      },
+      {
+        "lever": "scenario_weights",
+        "value": "downside_heavy",
+        "total_ecl": 1742047000.0,
+        "coverage_pct": 0.7648,
+        "delta_vs_base_pct": 10.7
+      },
+      {
+        "lever": "scenario_weights",
+        "value": "severe",
+        "total_ecl": 1966059824.0,
+        "coverage_pct": 0.8631,
+        "delta_vs_base_pct": 24.9
+      }
+    ]
+  }
+}

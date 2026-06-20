@@ -1,0 +1,33 @@
+{
+  "reporting_period": "latest",
+  "n_loans": 1137271,
+  "distribution": [
+    {
+      "stage": 1,
+      "n": 1018813,
+      "pct": 89.58
+    },
+    {
+      "stage": 2,
+      "n": 115650,
+      "pct": 10.17
+    },
+    {
+      "stage": 3,
+      "n": 2808,
+      "pct": 0.25
+    }
+  ],
+  "triggers": {
+    "default_90dpd": 2808,
+    "backstop_30dpd": 7782,
+    "pd_deterioration": 117760
+  },
+  "thresholds": {
+    "default_dpd": 3,
+    "backstop_dpd": 1,
+    "sicr_pd_rel_threshold": 2.0,
+    "sicr_pd_abs_threshold": 0.01
+  },
+  "migration": null
+}

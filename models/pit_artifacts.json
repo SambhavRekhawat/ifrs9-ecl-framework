@@ -1,0 +1,26 @@
+{
+  "ttc_pd": 0.01314,
+  "asset_correlation": 0.15,
+  "calibration": {
+    "observed_default_rate": 0.00744,
+    "mean_raw_score": 0.21674,
+    "mean_calibrated_pd": 0.00744
+  },
+  "macro_to_z": {
+    "r2": 0.5865,
+    "coefficients": {
+      "unemployment": -0.0514,
+      "hpi_yoy": 0.0668,
+      "gdp_yoy": 0.0552,
+      "treasury_10y": 0.1235
+    },
+    "intercept": -0.8256,
+    "features": [
+      "unemployment",
+      "hpi_yoy",
+      "gdp_yoy",
+      "treasury_10y"
+    ],
+    "n_obs": 227
+  }
+}

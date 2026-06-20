@@ -1,0 +1,47 @@
+{
+  "reporting_period": "latest",
+  "horizon_months": 60,
+  "annual_cpr": 0.1,
+  "weighted_lgd": 0.3429,
+  "lgd_by_scenario": {
+    "base": 0.3319,
+    "upside": 0.3319,
+    "downside": 0.3759
+  },
+  "weights": {
+    "base": 0.5,
+    "upside": 0.25,
+    "downside": 0.25
+  },
+  "summary": {
+    "n_loans": 1116435,
+    "total_ead": 227779497046.76,
+    "total_ecl": 1573914187.51,
+    "coverage_pct": 0.691,
+    "ecl_12m_total": 1334712556.64,
+    "ecl_lifetime_total": 3003889299.42,
+    "by_stage": [
+      {
+        "stage": 1,
+        "n_loans": 997978,
+        "ead": 208144551960.0393,
+        "ecl": 933436910.278635,
+        "coverage_pct": 0.448
+      },
+      {
+        "stage": 2,
+        "n_loans": 115649,
+        "ead": 19000252386.890003,
+        "ecl": 422841150.4638784,
+        "coverage_pct": 2.225
+      },
+      {
+        "stage": 3,
+        "n_loans": 2808,
+        "ead": 634692699.83,
+        "ecl": 217636126.77170703,
+        "coverage_pct": 34.29
+      }
+    ]
+  }
+}

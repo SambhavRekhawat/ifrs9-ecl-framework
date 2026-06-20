@@ -1,0 +1,237 @@
+# =====================================================================
+# IFRS 9 ECL Framework - Central Configuration
+# ---------------------------------------------------------------------
+# This is the single "control panel" for the whole project.
+# Change a number here instead of hunting through the code.
+# NOTE: The IFRS 9 thresholds below are SENSIBLE DEFAULTS / placeholders,
+#       not regulatory truth. We will justify and tune them in later stages.
+# =====================================================================
+
+project:
+  name: ifrs9_ecl
+  random_seed: 42          # fixing this makes results reproducible
+
+paths:
+  raw_data: data/raw       # original Fannie Mae files land here
+  parquet: data/parquet    # converted, fast columnar files
+  logs: logs               # log files
+
+data:
+  # Start SMALL. One quarter is plenty to build the whole pipeline.
+  vintage_quarters:
+    - "2005Q1"
+  sample_fraction: 0.03    # 0.03 = keep ~3% of LOANS (full history each). Saves disk.
+
+database:
+  host: localhost
+  port: 5432
+  name: ifrs9              # the PostgreSQL database name
+  # username & password are read from the .env file (never commit them)
+
+ifrs9:
+  sicr_dpd_threshold: 30          # 30+ DPD -> Significant Increase in Credit Risk (Stage 2)
+  default_dpd_threshold: 90       # 90+ DPD -> default (Stage 3)
+  pd_relative_threshold: 2.0      # PD more than doubled vs origination -> SICR
+  pd_absolute_threshold: 0.05     # PD above 5% in absolute terms -> SICR
+  discount_method: effective_interest_rate
+
+scenarios:
+  # Probability weights MUST sum to 1.0
+  weights:
+    base: 0.50
+    upside: 0.25
+    downside: 0.25
+
+macro:
+  # Verified FRED series IDs (the FHFA HPI is hosted on FRED too).
+  start_date: "2005-01-01"
+  fred_series:
+    unemployment: UNRATE        # Unemployment rate, monthly %
+    fed_funds: FEDFUNDS         # Federal funds effective rate, monthly %
+    cpi: CPIAUCSL               # CPI all urban consumers, monthly index (SA)
+    treasury_10y: DGS10         # 10-year Treasury yield, daily -> monthly avg
+    real_gdp: GDPC1             # Real GDP, quarterly -> forward-filled monthly
+    hpi: HPIPONM226S            # FHFA purchase-only HPI, monthly (SA)
+    mortgage_30y: MORTGAGE30US  # Freddie Mac 30-yr fixed mortgage rate, weekly -> monthly avg
+
+pit:
+  asset_correlation: 0.15       # Basel residential-mortgage asset correlation
+  calibration_method: isotonic  # recalibrate model scores to the true base rate
+  macro_features: [unemployment, hpi_yoy, gdp_yoy, treasury_10y]
+
+quality:
+  # Columns whose completeness is ENFORCED (others are report-only, since many
+  # Fannie Mae fields are legitimately sparse, e.g. foreclosure costs).
+  core_columns:
+    loan_master: [loan_id, fico_orig, ltv_orig, upb_orig, int_rate_orig, state, vintage]
+    loan_monthly: [loan_id, reporting_period, upb_current, delq_status, loan_age]
+  max_null_pct: 5.0           # a core column above this % null -> FAIL
+
+  # A value outside [min, max] is flagged as invalid (validity check).
+  numeric_ranges:
+    fico_orig: [300, 850]
+    ltv_orig: [1, 200]
+    cltv_orig: [1, 250]
+    dti_orig: [0, 80]
+    int_rate_orig: [0, 20]
+    int_rate_current: [0, 20]
+    number_of_units: [1, 4]
+    loan_age: [0, 480]
+
+  non_negative_columns: [upb_orig, upb_current, total_principal_current]
+
+  # Dates must parse AND fall within these bounds (strings -> parsed at runtime).
+  date_bounds:
+    reporting_period: ["2000-01-01", "2027-01-01"]
+    origination_date: ["1999-01-01", "2027-01-01"]
+
+  outlier_columns: [fico_orig, ltv_orig, dti_orig, int_rate_orig, upb_orig]
+
+  drift:
+    features: [fico_orig, ltv_orig, dti_orig, int_rate_orig]
+    psi_warn: 0.10
+    psi_alert: 0.25
+    bins: 10
+
+eda:
+  # Default = completed credit-event dispositions (Fannie Mae methodology).
+  default_zero_balance_codes: ["02", "03", "09", "15"]
+  prepay_zero_balance_code: "01"      # 01 = Prepaid or Matured
+  dpd30_min_months: 1                 # delq_status >= 1  -> 30+ days past due
+  dpd90_min_months: 3                 # delq_status >= 3  -> 90+ days (serious)
+  seasoning_max_age: 60               # months of loan age to chart in cohort curves
+
+features:
+  balance_change_months: 3      # window for balance-trend feature
+  delq_trend_months: 3          # window for delinquency-trend feature
+  rolling_windows: [6, 12]      # produce rolling max-delinquency for each
+  dpd30_min_months: 1           # delq_status >= 1 counts as 30+ DPD
+
+pd:
+  horizon_months: 12            # predict default within next 12 months
+  default_dpd: 3                # delq_status >= 3 (90+ DPD) = default event
+  oot_split_date: "2022-01-01"  # out-of-time: train < date, test >= date
+  max_train_rows: 750000           # laptop-safe (proven); prepay feeds only a constant CPR
+  max_test_rows: 750000            # cap OOT test too (avoids large-array OOM)       # ~no downsampling: trains on the full train set at its natural default rate
+  woe_bins: 8
+  random_seed: 42
+  features:
+    - fico_orig
+    - ltv_orig
+    - dti_orig
+    - int_rate_orig
+    - current_ltv
+    - upb_paydown_ratio
+    - rate_spread_vs_orig
+    - loan_age
+    - months_on_book
+    - delq_num
+    - max_delq_6m
+    - max_delq_12m
+    - count_30dpd_12m
+    - delq_change_3m
+    - balance_change_3m
+    - vintage_avg_fico
+
+prepay:
+  horizon_months: 12              # predict prepayment within next 12 months
+  oot_split_date: "2022-01-01"    # out-of-time split (same as PD)
+  max_train_rows: 750000           # laptop-safe (proven); prepay feeds only a constant CPR
+  max_test_rows: 750000            # cap OOT test too (avoids large-array OOM)         # ~no downsampling
+  woe_bins: 8
+  random_seed: 42
+  use_macro: true                 # join macro to add the rate-incentive driver
+  prepay_zbc: ["01", "1"]         # 01 = Prepaid/Matured (handle padded + unpadded)
+  default_zbc: ["02", "03", "09", "15", "2", "3", "9"]   # competing credit-event exits
+  features:                       # feature-store drivers
+    - fico_orig
+    - ltv_orig
+    - dti_orig
+    - int_rate_orig
+    - current_ltv
+    - upb_paydown_ratio
+    - loan_age
+    - months_on_book
+    - delq_num
+    - count_30dpd_12m
+    - balance_change_3m
+    - vintage_avg_fico
+  macro_features:                 # added when use_macro: true
+    - mortgage_30y                # prevailing 30-yr fixed mortgage rate
+    - refi_incentive              # (int_rate_orig + spread) - mortgage_30y  (dynamic, in-the-money)
+    - incentive_burnout           # refi_incentive x seasoning (burnout interaction)
+    - treasury_10y                # broader rate environment
+
+lgd:
+  default_zbc: ["02", "03", "09", "15"]   # credit-event dispositions = realised default/loss
+  hpi_series: hpi                          # macro column for mark-to-market LTV (HPIPONM226S)
+  downturn_hpi_shock: -0.20                # -20% house prices for downturn LGD
+  downturn_lgd_benchmark: 0.35
+  downturn_window_months: 24       # worst rolling window defines empirical downturn LGD
+  downturn_min_obs: 100            # min dispositions in a window to qualify             # prudent stressed-LGD anchor (benign data can't reveal stress)
+  ltv_buckets: [0, 60, 70, 80, 90, 100, 110, 999]
+  features: ["mtm_ltv", "loan_age_years"]  # parsimonious (thin default data)
+  lgd_floor: 0.05                          # minimum LGD (collateral never fully recovers costs)
+  eps: 0.001
+
+ead:
+  horizons: [3, 6, 12, 24]        # months ahead to validate projected vs actual UPB
+  sample_loan_mod: 50             # validate on ~1/50 of loans (hashtext modulo) for speed
+  apply_curtailment_adjustment: false  # if true, scale EAD by observed actual/scheduled paydown
+
+staging:
+  default_dpd: 3                 # delq_num >= 3 (90+ DPD) -> Stage 3 (default/credit-impaired)
+  backstop_dpd: 1                # delq_num >= 1 (30+ DPD) -> SICR backstop (Stage 2)
+  sicr_pd_rel_threshold: 2.0     # PD_now / PD_orig >= 2.0  -> SICR (Stage 2)
+  sicr_pd_abs_threshold: 0.01    # OR PD_now - PD_orig >= 0.01 (1pp) -> SICR
+  reporting_period: null         # null = latest row per loan (current book)
+  pd_model_file: pd_lightgbm.joblib
+  migration_from: null           # e.g. "2022-12-01" to compute a stage-migration matrix
+  migration_to: null             # e.g. "2023-12-01"
+
+scenario:
+  horizon_months: 60
+  ramp_months: 12               # months for a shock to ramp from 0 to its peak, then held
+  mode: macro                   # "macro" (shock macro vars -> macro_to_z) | "z_overlay" (shift Z directly)
+  enforce_monotonic: true       # clamp so downside Z <= base Z <= upside Z (guards the unemployment-sign issue)
+  weights:
+    base: 0.50
+    upside: 0.25
+    downside: 0.25
+  shocks:                       # peak deviation from baseline (natural units), reached at ramp_months
+    base:     {unemployment: 0.0,  hpi_yoy: 0.0,   gdp_yoy: 0.0,  treasury_10y: 0.0}
+    upside:   {unemployment: -1.0, hpi_yoy: 3.0,   gdp_yoy: 1.0,  treasury_10y: 0.5}
+    downside: {unemployment: 4.0,  hpi_yoy: -12.0, gdp_yoy: -3.0, treasury_10y: -1.0}
+  z_overlay:                    # Z shift vs baseline-model Z, used when mode = z_overlay
+    base: 0.0
+    upside: 0.5
+    downside: -1.0
+
+ecl:
+  horizon_months: 60            # lifetime horizon cap (months)
+  annual_cpr: 0.10              # prepayment assumption (constant CPR) for the survival curve
+  reporting_period: null        # null = latest row per loan (current book)
+  lgd_downside_scenario: downside   # which scenario uses the downturn LGD
+  discount_at_note_rate: true   # discount ECL at the loan note rate (EIR proxy)
+
+validation:
+  min_auc: 0.70                       # PD discrimination floor
+  coverage_range_pct: [0.05, 2.0]     # plausible portfolio ECL coverage band
+  stage3_lgd_tolerance_pct: 0.5       # Stage 3 coverage must ~ weighted LGD
+  calibration_ratio_band: [0.3, 3.0]  # overall predicted/observed PD (raw model, pre-isotonic)
+  sensitivity:
+    cpr_values: [0.0, 0.05, 0.10, 0.20]
+    horizon_values: [36, 48, 60]
+    downturn_lgd_values: [0.30, 0.35, 0.45]
+    weight_variants:
+      base:           {base: 0.50, upside: 0.25, downside: 0.25}
+      downside_heavy: {base: 0.40, upside: 0.20, downside: 0.40}
+      severe:         {base: 0.30, upside: 0.10, downside: 0.60}
+
+monitoring:
+  min_n_per_period: 500           # minimum performing loans for a period to be scored
+  psi_bins: 10
+  psi_amber: 0.10                 # PD-distribution PSI thresholds (period-over-period)
+  psi_red: 0.25
+  backtest_amber_dev: 0.50        # |mean_pred/realized - 1| amber/red thresholds
+  backtest_red_dev: 1.00

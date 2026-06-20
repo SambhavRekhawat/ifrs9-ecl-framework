@@ -1,0 +1,43 @@
+{
+  "method": "scheduled_amortization",
+  "curtailment_factor_12m": 0.9999,
+  "apply_curtailment_adjustment": false,
+  "validation": [
+    {
+      "horizon": 3,
+      "n": 1132862,
+      "mean_pred": 197863.0,
+      "mean_actual": 197460.0,
+      "mae": 499.0,
+      "median_abs_pct_err": 0.0,
+      "actual_to_scheduled": 1.0
+    },
+    {
+      "horizon": 6,
+      "n": 1068245,
+      "mean_pred": 195803.0,
+      "mean_actual": 195031.0,
+      "mae": 894.0,
+      "median_abs_pct_err": 0.0001,
+      "actual_to_scheduled": 1.0
+    },
+    {
+      "horizon": 12,
+      "n": 945045,
+      "mean_pred": 191573.0,
+      "mean_actual": 190125.0,
+      "mae": 1625.0,
+      "median_abs_pct_err": 0.0003,
+      "actual_to_scheduled": 0.9999
+    },
+    {
+      "horizon": 24,
+      "n": 725346,
+      "mean_pred": 182342.0,
+      "mean_actual": 179676.0,
+      "mae": 2941.0,
+      "median_abs_pct_err": 0.0011,
+      "actual_to_scheduled": 0.9997
+    }
+  ]
+}

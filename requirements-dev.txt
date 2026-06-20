@@ -1,0 +1,39 @@
+# Core data
+polars
+pandas
+numpy
+scipy
+pyarrow
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Modelling
+joblib
+scikit-learn
+xgboost
+lightgbm
+statsmodels
+
+# Optimisation & experiment tracking
+optuna
+mlflow
+
+# Data quality
+great-expectations
+
+# Macro data
+fredapi
+requests
+
+# Visualisation & app
+plotly
+streamlit
+
+# Config & utils
+pyyaml
+python-dotenv
+
+# Testing
+pytest

@@ -1,0 +1,197 @@
+{
+  "models": {
+    "scorecard": {
+      "auc": 0.5798,
+      "gini": 0.1595,
+      "ks": 0.12,
+      "precision": 0.1456,
+      "recall": 0.0775,
+      "brier": 0.154466,
+      "default_rate": 0.0703,
+      "n": 749999
+    },
+    "xgboost": {
+      "auc": 0.6286,
+      "gini": 0.2573,
+      "ks": 0.2187,
+      "precision": 0.3944,
+      "recall": 0.1949,
+      "brier": 0.083679,
+      "default_rate": 0.0703,
+      "n": 749999
+    },
+    "lightgbm": {
+      "auc": 0.6242,
+      "gini": 0.2485,
+      "ks": 0.2185,
+      "precision": 0.3679,
+      "recall": 0.2066,
+      "brier": 0.086653,
+      "default_rate": 0.0703,
+      "n": 749999
+    }
+  },
+  "iv": [
+    {
+      "feature": "refi_incentive",
+      "iv": 0.1864,
+      "strength": "medium"
+    },
+    {
+      "feature": "incentive_burnout",
+      "iv": 0.1671,
+      "strength": "medium"
+    },
+    {
+      "feature": "treasury_10y",
+      "iv": 0.1139,
+      "strength": "medium"
+    },
+    {
+      "feature": "mortgage_30y",
+      "iv": 0.0699,
+      "strength": "weak"
+    },
+    {
+      "feature": "int_rate_orig",
+      "iv": 0.0584,
+      "strength": "weak"
+    },
+    {
+      "feature": "balance_change_3m",
+      "iv": 0.0467,
+      "strength": "weak"
+    },
+    {
+      "feature": "vintage_avg_fico",
+      "iv": 0.0437,
+      "strength": "weak"
+    },
+    {
+      "feature": "current_ltv",
+      "iv": 0.0298,
+      "strength": "weak"
+    },
+    {
+      "feature": "months_on_book",
+      "iv": 0.0293,
+      "strength": "weak"
+    },
+    {
+      "feature": "loan_age",
+      "iv": 0.0289,
+      "strength": "weak"
+    },
+    {
+      "feature": "upb_paydown_ratio",
+      "iv": 0.0288,
+      "strength": "weak"
+    },
+    {
+      "feature": "count_30dpd_12m",
+      "iv": 0.0069,
+      "strength": "useless"
+    },
+    {
+      "feature": "fico_orig",
+      "iv": 0.004,
+      "strength": "useless"
+    },
+    {
+      "feature": "delq_num",
+      "iv": 0.0031,
+      "strength": "useless"
+    },
+    {
+      "feature": "ltv_orig",
+      "iv": 0.0019,
+      "strength": "useless"
+    },
+    {
+      "feature": "dti_orig",
+      "iv": 0.0016,
+      "strength": "useless"
+    }
+  ],
+  "best_model": "xgboost",
+  "calibration": [
+    {
+      "bin": 0,
+      "n": 75000,
+      "pred_pd": 0.1059,
+      "obs_default": 0.0489
+    },
+    {
+      "bin": 1,
+      "n": 75000,
+      "pred_pd": 0.1339,
+      "obs_default": 0.0513
+    },
+    {
+      "bin": 2,
+      "n": 75000,
+      "pred_pd": 0.149,
+      "obs_default": 0.0543
+    },
+    {
+      "bin": 3,
+      "n": 75000,
+      "pred_pd": 0.1616,
+      "obs_default": 0.0525
+    },
+    {
+      "bin": 4,
+      "n": 74999,
+      "pred_pd": 0.1742,
+      "obs_default": 0.0528
+    },
+    {
+      "bin": 5,
+      "n": 75000,
+      "pred_pd": 0.1885,
+      "obs_default": 0.0543
+    },
+    {
+      "bin": 6,
+      "n": 74999,
+      "pred_pd": 0.2057,
+      "obs_default": 0.0533
+    },
+    {
+      "bin": 7,
+      "n": 75001,
+      "pred_pd": 0.232,
+      "obs_default": 0.0587
+    },
+    {
+      "bin": 8,
+      "n": 75000,
+      "pred_pd": 0.2845,
+      "obs_default": 0.0678
+    },
+    {
+      "bin": 9,
+      "n": 75000,
+      "pred_pd": 0.5053,
+      "obs_default": 0.2094
+    }
+  ],
+  "features": [
+    "fico_orig",
+    "ltv_orig",
+    "dti_orig",
+    "int_rate_orig",
+    "current_ltv",
+    "upb_paydown_ratio",
+    "loan_age",
+    "months_on_book",
+    "delq_num",
+    "count_30dpd_12m",
+    "balance_change_3m",
+    "vintage_avg_fico",
+    "mortgage_30y",
+    "refi_incentive",
+    "incentive_burnout",
+    "treasury_10y"
+  ]
+}

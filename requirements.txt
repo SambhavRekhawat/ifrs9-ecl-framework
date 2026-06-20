@@ -1,0 +1,52 @@
+# Core data
+polars
+pandas
+numpy
+scipy
+pyarrow
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Modelling
+joblib
+scikit-learn
+xgboost
+lightgbm
+statsmodels
+
+# Optimisation & experiment tracking
+optuna
+mlflow
+
+# Data quality
+great-expectations
+
+# Macro data
+fredapi
+requests
+
+# Visualisation & app
+plotly
+streamlit
+
+# Config & utils
+pyyaml
+python-dotenv
+
+# Testing
+pytest
+
+# ============================================================================
+#  requirements.txt  —  used by Streamlit Community Cloud to run the dashboard
+#
+#  The dashboard (src/dashboard/app.py) only imports these four packages, plus
+#  numpy which pandas installs automatically. Keeping this list SHORT is what
+#  makes the deploy fast and reliable. The full set of libraries needed to
+#  re-run the modelling pipeline lives in requirements-dev.txt (not the site).
+# ============================================================================
+streamlit
+pandas
+pyyaml
+python-dotenv

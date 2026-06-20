@@ -1,0 +1,71 @@
+{
+  "stats": {
+    "n": 10281,
+    "mean": 0.3319,
+    "median": 0.2985,
+    "std": 0.2855,
+    "p10": 0.0,
+    "p90": 0.7433
+  },
+  "buckets": [
+    {
+      "ltv_bucket": "0-60",
+      "n": 1908,
+      "mean_lgd": 0.2589
+    },
+    {
+      "ltv_bucket": "60-70",
+      "n": 1225,
+      "mean_lgd": 0.3478
+    },
+    {
+      "ltv_bucket": "70-80",
+      "n": 1661,
+      "mean_lgd": 0.3836
+    },
+    {
+      "ltv_bucket": "80-90",
+      "n": 2129,
+      "mean_lgd": 0.3819
+    },
+    {
+      "ltv_bucket": "90-100",
+      "n": 2053,
+      "mean_lgd": 0.357
+    },
+    {
+      "ltv_bucket": "100-110",
+      "n": 1049,
+      "mean_lgd": 0.2414
+    },
+    {
+      "ltv_bucket": "110-999",
+      "n": 256,
+      "mean_lgd": 0.2183
+    }
+  ],
+  "fit": {
+    "r2": 0.0015,
+    "coefficients": {
+      "mtm_ltv": 0.0005
+    },
+    "intercept": 0.2905,
+    "n": 10281
+  },
+  "downturn": {
+    "hpi_shock": -0.2,
+    "base_mean_lgd": 0.3319,
+    "model_downturn_lgd": 0.3422,
+    "benchmark": 0.35,
+    "empirical_downturn": {
+      "lgd": 0.3759,
+      "window_start": "2014-12",
+      "window_end": "2016-11",
+      "n_obs": 1151,
+      "window_months": 24
+    },
+    "driver": "empirical",
+    "downturn_lgd": 0.3759,
+    "uplift_ratio": 1.133
+  }
+}
